@@ -93,4 +93,86 @@ It learns from information it shouldn’t have, so performance metrics lie.
 
 ---
 
-Would you like me to also make a **visual diagram/animation-style explanation** (step-by-step like in ML YouTube animations) so you can remember this easily?
+
+
+
+Excellent doubt 👌 This is **the heart of data leakage prevention**. Let’s break it slowly.
+
+---
+
+# ⚡ Why Scale Only the Training Set (not full dataset)?
+
+When you scale (normalize/standardize), you compute some statistics:
+
+* **StandardScaler** → needs mean (μ) and std (σ)
+* **MinMaxScaler** → needs min and max
+* etc.
+
+If you scale the **entire dataset before splitting**, then:
+
+* The **test set’s information leaks** into training.
+* The model indirectly “knows” about unseen data.
+* Your reported accuracy is **unrealistically high**.
+
+---
+
+## 🔍 Example (Numerical)
+
+Suppose we have 10 data points (ages):
+
+```
+[18, 20, 22, 24, 25, 27, 30, 60, 65, 70]
+```
+
+Now let’s say we want to split into:
+
+* Train = first 8 values
+* Test = last 2 values
+
+---
+
+### ❌ Wrong Way (scaling full dataset first)
+
+* Mean (μ) of full data = 36.1
+* Std (σ) of full data = 18.3
+
+When scaling train, you already used info from `[65, 70]` (test).
+So training “knows” the test distribution → **leakage**.
+
+---
+
+### ✅ Correct Way (fit scaler on train only)
+
+* Mean (μ) of train = 28.25
+* Std (σ) of train = 13.3
+
+Now scale train with these values,
+then apply same μ, σ to test.
+
+The model **never saw test distribution** → realistic evaluation.
+
+---
+
+## 🎯 Real-world Intuition
+
+Imagine you’re predicting house prices in 2025.
+If you scale with the **entire dataset (train + future test houses)**, you’re using **future price information** to normalize past data.
+
+That’s cheating, because in reality, when making predictions in 2025, you don’t know about future houses.
+
+---
+
+# ✅ General Rule
+
+* **Always compute preprocessing parameters (mean, std, min, max, etc.) only from the training data.**
+* **Apply the same transformation to the test data.**
+* This mimics the real world → when the model is deployed, new unseen data should be scaled based on the training distribution only.
+
+---
+
+👉 So, scaling full dataset before splitting = **future knowledge leaks in**.
+Scaling train only = **realistic deployment scenario**.
+
+---
+
+

@@ -1,1 +1,97 @@
+Reason: Randomness is used inside the Random Forest algorithm itself, not just in splitting data.
 
+Bootstrap sampling (bagging):
+
+For each tree, Random Forest doesn’t use the entire training set.
+
+Instead, it randomly samples (with replacement) from the training data to build each tree.
+
+So Tree 1, Tree 2, Tree 3… all see different versions of the training set.
+
+🔹 This randomness ensures trees are diverse, not all identical.
+
+Random feature selection at each split:
+
+When a tree splits a node, it doesn’t look at all features.
+
+It randomly selects a subset of features, then chooses the best split among those.
+
+This prevents trees from always choosing the same strong features.
+
+🔹 Again, this increases diversity.
+
+Why is this randomness important?
+
+If all trees were trained on the same data with the same features, they’d be identical.
+
+Then the “forest” would collapse into just one big tree (no real benefit).
+
+Randomness makes trees different, and when we average/vote their results, we reduce overfitting and improve generalization.
+
+Role of random_state here:
+
+Controls the random seeds used for:
+
+bootstrap sampling,
+
+random feature selection,
+
+and sometimes shuffling.
+
+If fixed → you get reproducible trees.
+
+If not fixed → you get slightly different forests each time.
+
+⚖️ So even after splitting train/test, randomness is still crucial inside Random Forest to make trees diverse.
+
+
+
+
+
+
+
+In Random Forest, both types of randomness happen — but at different stages:
+
+1. Random samples → different trees (Bootstrap Sampling 🪵🌳)
+
+Each tree is trained on a random sample of the training dataset (with replacement).
+
+Example:
+
+Suppose you have 1000 training points.
+
+Each tree gets ~1000 samples but drawn randomly (some points may repeat, some may be missing).
+
+So Tree 1, Tree 2, Tree 3… all see slightly different data.
+
+👉 This is called Bagging (Bootstrap Aggregation).
+
+2. Random features → different splits inside trees (Feature Subsampling 🌿)
+
+Even within one tree, when splitting a node:
+
+Instead of checking all features (like a normal Decision Tree),
+
+Random Forest only checks a subset of features.
+
+Example:
+
+If dataset has 20 features, maybe only 5 random features are considered at a split.
+
+At the next split, another random subset is chosen.
+
+👉 This makes trees more diverse, prevents dominance of a few strong features.
+
+So the answer:
+
+✅ Random samples go to different trees (bagging).
+✅ Random features are used inside each tree (at every split).
+
+Both together create decorrelated trees, and averaging them reduces variance → better accuracy.
+
+⚖️ Think of it like this:
+
+Random samples → different students taking different practice questions.
+
+Random features → each student solves problems using only some of the available formulas.
+When you combine their answers, you get a strong overall solution.

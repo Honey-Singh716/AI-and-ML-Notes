@@ -176,3 +176,8 @@ Scaling train only = **realistic deployment scenario**.
 ---
 
 
+IMPORTANT NOTE-
+
+
+Even with few missing values, dropping columns can sometimes work better than imputation. This may be due to noise or because the chosen imputation method (like mean/median) doesn’t fit the data. For example, missing values in GarageYrBlt might mean no garage, so filling with 0 or median may not make sense. Always choose imputation based on what the column represents.
+
